@@ -4,5 +4,7 @@ History of collective.recipe.i18noverrides
 0.1 (unreleased)
 ----------------
 
+- Initial implementation moved over from a one-off script.  [maurits]
+
 - Created recipe with ZopeSkel
   [Maurits van Rees]
