@@ -14,22 +14,22 @@ long_description = (
     read('README.txt')
     + '\n' +
     'Detailed Documentation\n'
-    '**********************\n'
+    '======================\n'
     + '\n' +
     read('collective', 'recipe', 'i18noverrides', 'README.txt')
     + '\n' +
     'Contributors\n' 
-    '************\n'
+    '============\n'
     + '\n' +
     read('CONTRIBUTORS.txt')
     + '\n' +
     'Change history\n'
-    '**************\n'
+    '==============\n'
     + '\n' + 
     read('CHANGES.txt')
     + '\n' +
-   'Download\n'
-    '********\n'
+    'Download\n'
+    '========\n'
     )
 entry_point = 'collective.recipe.i18noverrides:Recipe'
 entry_points = {"zc.buildout": ["default = %s" % entry_point]}
