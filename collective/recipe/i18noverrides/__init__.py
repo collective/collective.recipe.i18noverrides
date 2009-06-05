@@ -58,7 +58,9 @@ class Recipe(object):
         # have to see if this is really needed in our use case, as the
         # zope instances likely get removed anyway.  But if a source
         # file was removed meanwhile, we will have to remove it in the
-        # destinations as well.
+        # destinations as well.  But zc.buildout should do this
+        # automatically and even when returning 'created' I do not see
+        # that happening.  So we will ignore it.
         return tuple()
 
     # It is easiest if the updater does the same as the installer.
