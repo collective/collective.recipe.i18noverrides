@@ -1,0 +1,8 @@
+History of collective.recipe.i18noverrides
+==========================================
+
+0.1 (unreleased)
+----------------
+
+- Created recipe with ZopeSkel
+  [Maurits van Rees]
