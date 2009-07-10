@@ -4,7 +4,10 @@ History of collective.recipe.i18noverrides
 0.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Pin packages (at least zc.buildout) in both the main buildout.cfg
+  and the one in the tests, to avoid test failures simply because the
+  used zc.buildout is upgraded during the test run.
+  [maurits]
 
 
 0.1 (2009-06-05)

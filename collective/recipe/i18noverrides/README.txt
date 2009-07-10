@@ -25,6 +25,10 @@ template where we only have to fill in the source and destinations::
     ... [buildout]
     ... index = http://pypi.python.org/simple
     ... parts = i18noverrides
+    ... versions = versions
+    ...
+    ... [versions]
+    ... zc.buildout = 1.3.0
     ...
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
