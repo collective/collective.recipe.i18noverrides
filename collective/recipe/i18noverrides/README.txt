@@ -7,6 +7,10 @@ source
     Source directory that contains the .po files that the recipe will
     copy.  All ``*.po`` files will be copied.  This option is mandatory.
 
+package
+    Egg that contains the ``source`` directory. If this option is mentioned,
+    the ``source`` directory has to be a relative path.
+
 destinations
     Target directory or directories.  This should point to the
     directory of the zope 2 instance.  The recipe will create an i18n
@@ -170,3 +174,94 @@ Let's check the result::
     I am a German plone po file
     >>> cat('instance2', 'i18n', 'plone-nl.po')
     I am a Dutch plone po file
+
+Clean up
+
+    >>> remove('instance')
+    >>> remove('instance2')
+    >>> remove('translations')
+
+Usage with directory in egg
+===========================
+    
+We start by creating a buildout that uses the recipe.  Here is a
+template where we only have to fill in the source, package and 
+destinations::
+
+    >>> buildout_config_template = """
+    ... [buildout]
+    ... index = http://pypi.python.org/simple
+    ... parts = i18noverrides
+    ... versions = versions
+    ...
+    ... [versions]
+    ... zc.buildout = 1.3.0
+    ...
+    ... [i18noverrides]
+    ... recipe = collective.recipe.i18noverrides
+    ... source = %(source)s
+    ... package = %(package)s
+    ... destinations = %(dest)s
+    ... """
+
+We specify ``package`` and ``source``::
+
+    >>> write('buildout.cfg', buildout_config_template % {
+    ... 'source': 'tests/translations',
+    ... 'package': 'collective.recipe.i18noverrides',
+    ... 'dest': 'translations'})
+
+We prepare target directory::
+
+    >>> mkdir('translations')
+
+Running the buildout gives us::
+
+    >>> print system(buildout) 
+    Uninstalling i18noverrides.
+    Installing i18noverrides.
+    collective.recipe.i18noverrides: Creating directory translations/i18n
+    collective.recipe.i18noverrides: Copied 2 po files.
+    <BLANKLINE>
+
+Let's check the result::
+
+    >>> ls('translations')
+    d  i18n
+    >>> ls('translations', 'i18n')
+    -  test-fr.po
+    -  test-nl.po
+    >>> cat('translations', 'i18n', 'test-fr.po')
+    Un fichier .po
+    >>> cat('translations', 'i18n', 'test-nl.po')
+    Een .po bestand
+
+We specify ``package`` and an absolute path in ``source``::
+
+    >>> write('buildout.cfg', buildout_config_template % {
+    ... 'source': '/translations',
+    ... 'package': 'testegg',
+    ... 'dest': 'translations'})
+
+Running the buildout gives us::
+
+    >>> print system(buildout) 
+    Uninstalling i18noverrides.
+    Installing i18noverrides.
+    collective.recipe.i18noverrides: because package option is provided,
+    source '/translations' should be relative, not absolute.
+    <BLANKLINE>
+
+We specify a `package`` that is not available::
+
+    >>> write('buildout.cfg', buildout_config_template % {
+    ... 'source': 'translations',
+    ... 'package': 'dummy',
+    ... 'dest': 'translations'})
+
+Running the buildout gives us::
+
+    >>> print system(buildout) 
+    Installing i18noverrides.
+    collective.recipe.i18noverrides: Package 'dummy' is not installed.
+    <BLANKLINE>

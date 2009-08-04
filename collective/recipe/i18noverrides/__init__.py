@@ -19,6 +19,22 @@ class Recipe(object):
         """Installer"""
         #print self.options
         source = self.options.get('source')
+        package_name = self.options.get('package', None)
+        if package_name is not None:
+            if os.path.abspath(source) == source:
+                logmsg = ('because package option is provided,\n' +
+                    'source \'%s\' should be relative, not absolute.')
+                logger.error(logmsg, source)
+                sys.exit(1)
+            else:
+                try:
+                    package = __import__(package_name, {}, {}, '__doc__')
+                except ImportError:
+                    logger.error('Package %r is not installed.', package_name)
+                    sys.exit(1)
+                path = os.path.dirname(package.__file__)
+                source = os.path.join(path, source)
+
         destinations = self.options.get('destinations')
         destinations = [d for d in destinations.splitlines() if d]
         for dir in [source] + destinations:
@@ -28,7 +44,6 @@ class Recipe(object):
             if not os.path.isdir(dir):
                 logger.error('path %r must be a directory.', dir)
                 sys.exit(1)
-
         po_files = [f for f in os.listdir(source) if f.endswith('.po')]
         if len(po_files) == 0:
             logger.warn('source %r contains no .po files.', source)
