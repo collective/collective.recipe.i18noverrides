@@ -1,7 +1,7 @@
 History of collective.recipe.i18noverrides
 ==========================================
 
-0.2 (unreleased)
+0.2 (2009-08-12)
 ----------------
 
 - Allow to specify an egg (with optional package)
