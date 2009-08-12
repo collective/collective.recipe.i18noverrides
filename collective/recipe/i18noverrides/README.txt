@@ -7,9 +7,14 @@ source
     Source directory that contains the .po files that the recipe will
     copy.  All ``*.po`` files will be copied.  This option is mandatory.
 
-package
+egg
     Egg that contains the ``source`` directory. If this option is mentioned,
     the ``source`` directory has to be a relative path.
+
+package
+    Can be mentioned when ``source`` cannot be found in ``egg`` for one of the
+    following reasons : ``egg`` holds a version specification; ``egg`` is not
+    equal to the name of the installed package; ``source`` is in a subpackage.
 
 destinations
     Target directory or directories.  This should point to the
@@ -49,7 +54,7 @@ directories::
 
 Running the buildout gives us::
 
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Installing i18noverrides.
     collective.recipe.i18noverrides: path '/sample-buildout/translations' does not exist.
     <BLANKLINE>
@@ -185,7 +190,7 @@ Usage with directory in egg
 ===========================
     
 We start by creating a buildout that uses the recipe.  Here is a
-template where we only have to fill in the source, package and 
+template where we only have to fill in the source, egg and 
 destinations::
 
     >>> buildout_config_template = """
@@ -200,15 +205,15 @@ destinations::
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
     ... source = %(source)s
-    ... package = %(package)s
+    ... egg = %(egg)s
     ... destinations = %(dest)s
     ... """
 
-We specify ``package`` and ``source``::
+We specify ``egg`` and ``source``::
 
     >>> write('buildout.cfg', buildout_config_template % {
     ... 'source': 'tests/translations',
-    ... 'package': 'collective.recipe.i18noverrides',
+    ... 'egg': 'collective.recipe.i18noverrides',
     ... 'dest': 'translations'})
 
 We prepare target directory::
@@ -236,11 +241,11 @@ Let's check the result::
     >>> cat('translations', 'i18n', 'test-nl.po')
     Een .po bestand
 
-We specify ``package`` and an absolute path in ``source``::
+We specify ``egg`` and an absolute path in ``source``::
 
     >>> write('buildout.cfg', buildout_config_template % {
     ... 'source': '/translations',
-    ... 'package': 'testegg',
+    ... 'egg': 'testegg',
     ... 'dest': 'translations'})
 
 Running the buildout gives us::
@@ -248,20 +253,23 @@ Running the buildout gives us::
     >>> print system(buildout) 
     Uninstalling i18noverrides.
     Installing i18noverrides.
-    collective.recipe.i18noverrides: because package option is provided,
+    collective.recipe.i18noverrides: because egg option is provided,
     source '/translations' should be relative, not absolute.
     <BLANKLINE>
 
-We specify a `package`` that is not available::
+We specify an `egg`` that does not hold the configured ``source``::
 
     >>> write('buildout.cfg', buildout_config_template % {
     ... 'source': 'translations',
-    ... 'package': 'dummy',
+    ... 'egg': 'zc.recipe.egg',
     ... 'dest': 'translations'})
 
 Running the buildout gives us::
 
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Installing i18noverrides.
-    collective.recipe.i18noverrides: Package 'dummy' is not installed.
+    Getting distribution for 'zc.recipe.egg'.
+    Got zc.recipe.egg ...
+    collective.recipe.i18noverrides: path '/sample-buildout/eggs/zc.recipe.egg.../zc/recipe/egg/translations' does not exist.
     <BLANKLINE>
+

@@ -4,7 +4,8 @@ History of collective.recipe.i18noverrides
 0.2 (unreleased)
 ----------------
 
-- Specify a package where the source directory can be found
+- Allow to specify an egg (with optional package)
+  where the source directory can be found.
   [gotcha]
 
 - Pin packages (at least zc.buildout) in both the main buildout.cfg

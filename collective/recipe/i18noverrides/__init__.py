@@ -5,6 +5,8 @@ import logging
 import os
 import shutil
 import sys
+import pkg_resources
+import zc.buildout
 
 logger = logging.getLogger('collective.recipe.i18noverrides')
 
@@ -15,25 +17,11 @@ class Recipe(object):
     def __init__(self, buildout, name, options):
         self.buildout, self.name, self.options = buildout, name, options
 
-    def install(self):
-        """Installer"""
-        #print self.options
+    def configure(self):
         source = self.options.get('source')
-        package_name = self.options.get('package', None)
-        if package_name is not None:
-            if os.path.abspath(source) == source:
-                logmsg = ('because package option is provided,\n' +
-                    'source \'%s\' should be relative, not absolute.')
-                logger.error(logmsg, source)
-                sys.exit(1)
-            else:
-                try:
-                    package = __import__(package_name, {}, {}, '__doc__')
-                except ImportError:
-                    logger.error('Package %r is not installed.', package_name)
-                    sys.exit(1)
-                path = os.path.dirname(package.__file__)
-                source = os.path.join(path, source)
+        egg_spec = self.options.get('egg', None)
+        if egg_spec is not None:
+            source = self.sourceFromEgg(egg_spec, source)
 
         destinations = self.options.get('destinations')
         destinations = [d for d in destinations.splitlines() if d]
@@ -44,13 +32,56 @@ class Recipe(object):
             if not os.path.isdir(dir):
                 logger.error('path %r must be a directory.', dir)
                 sys.exit(1)
-        po_files = [f for f in os.listdir(source) if f.endswith('.po')]
+        self.destinations = destinations
+        self.source = source
+
+    def sourceFromEgg(self, egg_spec, source):
+        if os.path.abspath(source) == source:
+            logmsg = ('because egg option is provided,\n' +
+                'source \'%s\' should be relative, not absolute.')
+            logger.error(logmsg, source)
+            sys.exit(1)
+        package_name = self.options.get('package', egg_spec)
+        try:
+            req = pkg_resources.Requirement.parse(egg_spec)
+
+            buildout = self.buildout
+            buildout_options = buildout['buildout']
+            if pkg_resources.working_set.find(req) is None:
+                if buildout.offline:
+                    dest = None
+                    path = [buildout_options['develop-eggs-directory'],
+                            buildout_options['eggs-directory'],
+                            ]
+                else:
+                    dest = buildout_options['eggs-directory']
+                    path = [buildout_options['develop-eggs-directory']]
+
+                zc.buildout.easy_install.install(
+                    [egg_spec], dest,
+                    links=buildout._links,
+                    index=buildout_options.get('index'),
+                    path=path,
+                    working_set=pkg_resources.working_set,
+                    newest=buildout.newest,
+                    allow_hosts=buildout._allow_hosts)
+            package = __import__(package_name, {}, {}, '__doc__')
+        except ImportError:
+            logger.error('Package %r could not be imported.', package_name)
+            sys.exit(1)
+        path = os.path.dirname(package.__file__)
+        return os.path.join(path, source)
+
+    def install(self):
+        """Installer"""
+        self.configure()
+        po_files = [f for f in os.listdir(self.source) if f.endswith('.po')]
         if len(po_files) == 0:
-            logger.warn('source %r contains no .po files.', source)
+            logger.warn('source %r contains no .po files.', self.source)
             return tuple()
 
         created = []
-        for destination in destinations:
+        for destination in self.destinations:
             i18n_dir = os.path.join(destination, 'i18n')
             if not os.path.exists(i18n_dir):
                 logger.info("Creating directory %s" % i18n_dir)
@@ -60,7 +91,7 @@ class Recipe(object):
                 logger.error("%r is not a directory." % i18n_dir)
                 sys.exit(1)
             for po_file in po_files:
-                file_path = os.path.join(source, po_file)
+                file_path = os.path.join(self.source, po_file)
                 shutil.copy(file_path, i18n_dir)
                 created.append(os.path.join(i18n_dir, po_file))
 
