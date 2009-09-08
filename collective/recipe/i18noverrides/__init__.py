@@ -23,8 +23,12 @@ class Recipe(object):
         if egg_spec is not None:
             source = self.sourceFromEgg(egg_spec, source)
 
-        destinations = self.options.get('destinations')
+        destinations = self.options.get('destinations', '')
         destinations = [d for d in destinations.splitlines() if d]
+        if not destinations:
+            destinations = [
+                part['location'] for part in self.buildout.values()
+                if part.get('recipe') == 'plone.recipe.zope2instance']
         for dir in [source] + destinations:
             if not os.path.exists(dir):
                 logger.error('path %r does not exist.', dir)
@@ -81,6 +85,10 @@ class Recipe(object):
             return tuple()
 
         created = []
+        if not self.destinations:
+            logger.warn('No destinations specified.')
+            return tuple()
+
         for destination in self.destinations:
             i18n_dir = os.path.join(destination, 'i18n')
             if not os.path.exists(i18n_dir):

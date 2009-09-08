@@ -25,7 +25,7 @@ destinations
 
 
 Example usage
-=============
+-------------
 
 We'll start by creating a buildout that uses the recipe.  Here is a
 template where we only have to fill in the source and destinations::
@@ -62,7 +62,7 @@ Running the buildout gives us::
 The source must be a directory::
 
     >>> write('translations', 'This is a file.')
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Installing i18noverrides.
     collective.recipe.i18noverrides: path '/sample-buildout/translations' must be a directory.
     <BLANKLINE>
@@ -71,7 +71,7 @@ Now we remove this file and try with a proper directory::
 
     >>> remove('translations')
     >>> mkdir('translations')
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Installing i18noverrides.
     collective.recipe.i18noverrides: path '/sample-buildout/instance' does not exist.
     <BLANKLINE>
@@ -80,13 +80,13 @@ So we set a destination too and first try with a file as well before
 creating a directory::
 
     >>> write('instance', 'This is a file.')
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Installing i18noverrides.
     collective.recipe.i18noverrides: path '/sample-buildout/instance' must be a directory.
     <BLANKLINE>
     >>> remove('instance')
     >>> mkdir('instance')
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Installing i18noverrides.
     collective.recipe.i18noverrides: source '/sample-buildout/translations' contains no .po files.
     <BLANKLINE>
@@ -98,13 +98,13 @@ buildout run only had a warning and finished successfully, the recipe
 now runs in update mode, which does the same as the install mode::
 
     >>> write('translations', 'not-a-po-file', 'I am not a po file')
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Updating i18noverrides.
     collective.recipe.i18noverrides: source '/sample-buildout/translations' contains no .po files.
     <BLANKLINE>
     >>> write('translations', 'plone-nl.po', 'I am a Dutch plone po file')
     >>> write('translations', 'plone-de.po', 'I am a German plone po file')
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Updating i18noverrides.
     collective.recipe.i18noverrides: Creating directory /sample-buildout/instance/i18n
     collective.recipe.i18noverrides: Copied 2 po files.
@@ -135,7 +135,7 @@ a i18n file instead of a directory, we fail::
 
     >>> remove('instance', 'i18n')
     >>> write('instance', 'i18n', 'I am a file')
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Updating i18noverrides.
     collective.recipe.i18noverrides: '/sample-buildout/instance/i18n' is not a directory.
     <BLANKLINE>
@@ -148,7 +148,7 @@ It should also be possible to have multiple destinations::
     ... 'dest': """
     ...     ${buildout:directory}/instance
     ...     ${buildout:directory}/instance2"""})
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Installing i18noverrides.
     collective.recipe.i18noverrides: path '/sample-buildout/instance2' does not exist.
     <BLANKLINE>
@@ -156,7 +156,7 @@ It should also be possible to have multiple destinations::
 Right, right, we will create that directory too::
 
     >>> mkdir('instance2')
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Installing i18noverrides.
     collective.recipe.i18noverrides: Creating directory /sample-buildout/instance/i18n
     collective.recipe.i18noverrides: Creating directory /sample-buildout/instance2/i18n
@@ -180,17 +180,129 @@ Let's check the result::
     >>> cat('instance2', 'i18n', 'plone-nl.po')
     I am a Dutch plone po file
 
-Clean up
+Clean up:
 
     >>> remove('instance')
     >>> remove('instance2')
+
+
+Integration with plone.recipe.zope2instance
+-------------------------------------------
+
+As the recipe is normally used to add translations to zope 2
+instances, it makes sense to search for buildout parts that setup zope
+instances and take those locations.
+
+    >>> write('buildout.cfg', """
+    ... [buildout]
+    ... index = http://pypi.python.org/simple
+    ... parts = instance instance2 zeoclient i18noverrides
+    ... versions = versions
+    ...
+    ... [versions]
+    ... zc.buildout = 1.3.0
+    ... plone.recipe.zope2instance = 3.5
+    ...
+    ... [i18noverrides]
+    ... recipe = collective.recipe.i18noverrides
+    ... source = ${buildout:directory}/translations
+    ...
+    ... [instance]
+    ... recipe = plone.recipe.zope2instance
+    ... user = admin:admin
+    ...
+    ... [instance2]
+    ... recipe = plone.recipe.zope2instance
+    ... user = admin:admin
+    ...
+    ... [zeoclient]
+    ... recipe = plone.recipe.zope2instance
+    ... user = admin:admin
+    ... """)
+
+We mock a mkzopeinstance script in the bin directory:
+
+    >>> write('bin/mkzopeinstance', """
+    ... import sys
+    ... import os
+    ... path = sys.argv[2]
+    ... os.mkdir(path)
+    ... os.mkdir(os.path.join(path, 'etc'))
+    ... """)
+
+We do not want to install a complete zope2 instance in the tests, so
+we do not add it to the buildout parts.  That does mean that running
+buildout now fails:
+
+    >>> print system(buildout)
+    Getting distribution for 'plone.recipe.zope2instance==3.5'.
+    ...
+    Installing instance.
+    Generated script '.../bin/instance'.
+    ...
+    Installing i18noverrides.
+    collective.recipe.i18noverrides: Creating directory .../i18n
+    collective.recipe.i18noverrides: Creating directory .../i18n
+    collective.recipe.i18noverrides: Creating directory .../i18n
+    collective.recipe.i18noverrides: Copied 2 po files.
+    <BLANKLINE>
+    >>> ls('parts', 'instance')
+    d etc
+    d i18n
+    >>> ls('parts', 'instance', 'i18n')
+    -  plone-de.po
+    -  plone-nl.po
+    >>> ls('parts', 'instance2', 'i18n')
+    -  plone-de.po
+    -  plone-nl.po
+    >>> ls('parts', 'zeoclient', 'i18n')
+    -  plone-de.po
+    -  plone-nl.po
+
+If we explicitly specify destinations, the recipes are ignored.
+
+    >>> write('buildout.cfg', """
+    ... [buildout]
+    ... index = http://pypi.python.org/simple
+    ... parts = dummy i18noverrides
+    ... versions = versions
+    ...
+    ... [versions]
+    ... zc.buildout = 1.3.0
+    ... plone.recipe.zope2instance = 3.5
+    ...
+    ... [i18noverrides]
+    ... recipe = collective.recipe.i18noverrides
+    ... source = ${buildout:directory}/translations
+    ... destinations = ${buildout:directory}/dest
+    ...
+    ... [dummy]
+    ... recipe = plone.recipe.zope2instance
+    ... user = admin:admin
+    ... """)
+    >>> mkdir('dest')
+    >>> print system(buildout)
+    Uninstalling ...
+    Installing i18noverrides.
+    collective.recipe.i18noverrides: Creating directory /.../dest/i18n
+    collective.recipe.i18noverrides: Copied 2 po files.
+    <BLANKLINE>
+    >>> ls('parts', 'dummy')
+    d etc
+    >>> ls('dest', 'i18n')
+    -  plone-de.po
+    -  plone-nl.po
+
+Clean up:
+
     >>> remove('translations')
 
+
 Usage with directory in egg
-===========================
-    
+---------------------------
+
 We start by creating a buildout that uses the recipe.  Here is a
-template where we only have to fill in the source, egg and 
+template where we only have to fill in the source, egg and
 destinations::
 
     >>> buildout_config_template = """
@@ -222,8 +334,8 @@ We prepare target directory::
 
 Running the buildout gives us::
 
-    >>> print system(buildout) 
-    Uninstalling i18noverrides.
+    >>> print system(buildout)
+    Uninstalling ...
     Installing i18noverrides.
     collective.recipe.i18noverrides: Creating directory translations/i18n
     collective.recipe.i18noverrides: Copied 2 po files.
@@ -250,7 +362,7 @@ We specify ``egg`` and an absolute path in ``source``::
 
 Running the buildout gives us::
 
-    >>> print system(buildout) 
+    >>> print system(buildout)
     Uninstalling i18noverrides.
     Installing i18noverrides.
     collective.recipe.i18noverrides: because egg option is provided,
@@ -268,8 +380,5 @@ Running the buildout gives us::
 
     >>> print system(buildout)
     Installing i18noverrides.
-    Getting distribution for 'zc.recipe.egg'.
-    Got zc.recipe.egg ...
     collective.recipe.i18noverrides: path '/sample-buildout/eggs/zc.recipe.egg.../zc/recipe/egg/translations' does not exist.
     <BLANKLINE>
-
