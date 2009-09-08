@@ -1,7 +1,7 @@
 History of collective.recipe.i18noverrides
 ==========================================
 
-0.4 (unreleased)
+0.4 (2009-09-08)
 ----------------
 
 - Only consider buildout parts for inclusion in the destinations when
