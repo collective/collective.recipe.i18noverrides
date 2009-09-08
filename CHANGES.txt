@@ -4,7 +4,11 @@ History of collective.recipe.i18noverrides
 0.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Only consider buildout parts for inclusion in the destinations when
+  they are actually in the parts section of buildout.  Otherwise you
+  can run into errors like this:
+  Error: Missing option: zptdebugger:__buildout_signature__
+  [maurits]
 
 
 0.3 (2009-09-08)

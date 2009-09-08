@@ -26,9 +26,13 @@ class Recipe(object):
         destinations = self.options.get('destinations', '')
         destinations = [d for d in destinations.splitlines() if d]
         if not destinations:
-            destinations = [
-                part['location'] for part in self.buildout.values()
-                if part.get('recipe') == 'plone.recipe.zope2instance']
+            parts = self.buildout['buildout']['parts']
+            part_names = parts.split()
+            destinations = []
+            for part_name in part_names:
+                part = self.buildout[part_name]
+                if part.get('recipe') == 'plone.recipe.zope2instance':
+                    destinations.append(part['location'])
         for dir in [source] + destinations:
             if not os.path.exists(dir):
                 logger.error('path %r does not exist.', dir)
