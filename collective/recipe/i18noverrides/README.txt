@@ -38,6 +38,7 @@ template where we only have to fill in the source and destinations::
     ...
     ... [versions]
     ... zc.buildout = 1.3.0
+    ... setuptools = 0.6c9
     ...
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
@@ -201,6 +202,7 @@ instances and take those locations.
     ...
     ... [versions]
     ... zc.buildout = 1.3.0
+    ... setuptools = 0.6c9
     ... plone.recipe.zope2instance = 3.5
     ...
     ... [i18noverrides]
@@ -269,6 +271,7 @@ If we explicitly specify destinations, the recipes are ignored.
     ...
     ... [versions]
     ... zc.buildout = 1.3.0
+    ... setuptools = 0.6c9
     ... plone.recipe.zope2instance = 3.5
     ...
     ... [i18noverrides]
@@ -313,6 +316,7 @@ destinations::
     ...
     ... [versions]
     ... zc.buildout = 1.3.0
+    ... setuptools = 0.6c9
     ...
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
