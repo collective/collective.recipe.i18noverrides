@@ -37,7 +37,8 @@ template where we only have to fill in the source and destinations::
     ... versions = versions
     ...
     ... [versions]
-    ... zc.buildout = 1.3.0
+    ... zc.buildout = 1.4.3
+    ... zc.recipe.egg = 1.2.2
     ... setuptools = 0.6c9
     ...
     ... [i18noverrides]
@@ -201,9 +202,10 @@ instances and take those locations.
     ... versions = versions
     ...
     ... [versions]
-    ... zc.buildout = 1.3.0
+    ... zc.buildout = 1.4.3
+    ... zc.recipe.egg = 1.2.2
     ... setuptools = 0.6c9
-    ... plone.recipe.zope2instance = 3.5
+    ... plone.recipe.zope2instance = 3.9
     ...
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
@@ -237,7 +239,7 @@ we do not add it to the buildout parts.  That does mean that running
 buildout now fails:
 
     >>> print system(buildout)
-    Getting distribution for 'plone.recipe.zope2instance==3.5'.
+    Getting distribution for 'plone.recipe.zope2instance==3.9'.
     ...
     Installing instance.
     Generated script '.../bin/instance'.
@@ -270,9 +272,10 @@ If we explicitly specify destinations, the recipes are ignored.
     ... versions = versions
     ...
     ... [versions]
-    ... zc.buildout = 1.3.0
+    ... zc.buildout = 1.4.3
+    ... zc.recipe.egg = 1.2.2
     ... setuptools = 0.6c9
-    ... plone.recipe.zope2instance = 3.5
+    ... plone.recipe.zope2instance = 3.9
     ...
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
@@ -315,8 +318,13 @@ destinations::
     ... versions = versions
     ...
     ... [versions]
-    ... zc.buildout = 1.3.0
+    ... zc.buildout = 1.4.3
+    ... zc.recipe.egg = 1.2.2
     ... setuptools = 0.6c9
+    ... # We need to pin this one because it still needs to be uninstalled.
+    ... # If we do not pin, the uninstall code will get the latest version,
+    ... # which depends on Zope2, which means we are hosed...
+    ... plone.recipe.zope2instance = 3.9
     ...
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
