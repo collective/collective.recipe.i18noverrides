@@ -1,7 +1,7 @@
 History of collective.recipe.i18noverrides
 ==========================================
 
-0.5 (2010-08-25)
+1.0 (2010-08-25)
 ----------------
 
 - Added a note to warn that this recipe will have no effect in Plone 4
