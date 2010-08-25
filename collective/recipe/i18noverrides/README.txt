@@ -37,8 +37,8 @@ template where we only have to fill in the source and destinations::
     ... versions = versions
     ...
     ... [versions]
-    ... zc.buildout = 1.5.0
-    ... zc.recipe.egg = 1.3.2
+    ... zc.buildout = 1.4.3
+    ... zc.recipe.egg = 1.2.2
     ... setuptools = 0.6c11
     ... distribute = 0.6.14
     ...
@@ -203,8 +203,8 @@ instances and take those locations.
     ... versions = versions
     ...
     ... [versions]
-    ... zc.buildout = 1.5.0
-    ... zc.recipe.egg = 1.3.2
+    ... zc.buildout = 1.4.3
+    ... zc.recipe.egg = 1.2.2
     ... setuptools = 0.6c11
     ... distribute = 0.6.14
     ... plone.recipe.zope2instance = 3.9
@@ -274,8 +274,8 @@ If we explicitly specify destinations, the recipes are ignored.
     ... versions = versions
     ...
     ... [versions]
-    ... zc.buildout = 1.5.0
-    ... zc.recipe.egg = 1.3.2
+    ... zc.buildout = 1.4.3
+    ... zc.recipe.egg = 1.2.2
     ... setuptools = 0.6c11
     ... distribute = 0.6.14
     ... plone.recipe.zope2instance = 3.9
@@ -321,8 +321,8 @@ destinations::
     ... versions = versions
     ...
     ... [versions]
-    ... zc.buildout = 1.5.0
-    ... zc.recipe.egg = 1.3.2
+    ... zc.buildout = 1.4.3
+    ... zc.recipe.egg = 1.2.2
     ... setuptools = 0.6c11
     ... distribute = 0.6.14
     ... # We need to pin this one because it still needs to be uninstalled.
