@@ -9,6 +9,22 @@ those directories.  The translations in those .po files will override
 any other translations.  
 
 
+Plone/Zope versions
+-------------------
+
+This is tested for Plone 3 with Zope 2.10.  It should work for a plain
+Zope site without Plone as well, as there is nothing Plone specific to
+this recipe.  It should work fine for all previous versions as well.
+
+For Plone 4 and Zope 2.12 it has no effect: there is no code anymore
+in those versions that looks for translations in an i18n folder of
+your instance.  You should create an own package and register a
+locales directory with translation in it.  For more info or questions,
+see the `plone-internationalization mailing list`_.
+
+.. _`plone-internationalization mailing list`: http://plone-regional-forums.221720.n2.nabble.com/plone4-how-to-override-translations-in-plone-app-locales-tt5456430.html
+
+
 Use case
 --------
 
