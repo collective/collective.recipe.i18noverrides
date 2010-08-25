@@ -40,6 +40,7 @@ template where we only have to fill in the source and destinations::
     ... zc.buildout = 1.5.0
     ... zc.recipe.egg = 1.3.2
     ... setuptools = 0.6c11
+    ... distribute = 0.6.14
     ...
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
@@ -205,6 +206,7 @@ instances and take those locations.
     ... zc.buildout = 1.5.0
     ... zc.recipe.egg = 1.3.2
     ... setuptools = 0.6c11
+    ... distribute = 0.6.14
     ... plone.recipe.zope2instance = 3.9
     ...
     ... [i18noverrides]
@@ -275,6 +277,7 @@ If we explicitly specify destinations, the recipes are ignored.
     ... zc.buildout = 1.5.0
     ... zc.recipe.egg = 1.3.2
     ... setuptools = 0.6c11
+    ... distribute = 0.6.14
     ... plone.recipe.zope2instance = 3.9
     ...
     ... [i18noverrides]
@@ -321,6 +324,7 @@ destinations::
     ... zc.buildout = 1.5.0
     ... zc.recipe.egg = 1.3.2
     ... setuptools = 0.6c11
+    ... distribute = 0.6.14
     ... # We need to pin this one because it still needs to be uninstalled.
     ... # If we do not pin, the uninstall code will get the latest version,
     ... # which depends on Zope2, which means we are hosed...
