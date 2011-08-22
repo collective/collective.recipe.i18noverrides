@@ -208,6 +208,7 @@ instances and take those locations.
     ... setuptools = 0.6c11
     ... distribute = 0.6.14
     ... plone.recipe.zope2instance = 3.9
+    ... mailinglogger = 3.3
     ...
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
@@ -279,6 +280,7 @@ If we explicitly specify destinations, the recipes are ignored.
     ... setuptools = 0.6c11
     ... distribute = 0.6.14
     ... plone.recipe.zope2instance = 3.9
+    ... mailinglogger = 3.3
     ...
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
@@ -329,6 +331,7 @@ destinations::
     ... # If we do not pin, the uninstall code will get the latest version,
     ... # which depends on Zope2, which means we are hosed...
     ... plone.recipe.zope2instance = 3.9
+    ... mailinglogger = 3.3
     ...
     ... [i18noverrides]
     ... recipe = collective.recipe.i18noverrides
