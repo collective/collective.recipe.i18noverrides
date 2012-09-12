@@ -18,14 +18,14 @@ long_description = (
     + '\n' +
     read('collective', 'recipe', 'i18noverrides', 'README.txt')
     + '\n' +
-    'Contributors\n' 
+    'Contributors\n'
     '============\n'
     + '\n' +
     read('CONTRIBUTORS.txt')
     + '\n' +
     'Change history\n'
     '==============\n'
-    + '\n' + 
+    + '\n' +
     read('CHANGES.rst')
     + '\n' +
     'Download\n'
