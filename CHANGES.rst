@@ -1,6 +1,12 @@
 History of collective.recipe.i18noverrides
 ==========================================
 
+1.2 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 1.1 (2012-09-13)
 ----------------
 
