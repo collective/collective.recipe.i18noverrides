@@ -5,6 +5,7 @@ This module contains the tool of collective.recipe.i18noverrides
 import os
 from setuptools import setup, find_packages
 
+
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
@@ -42,16 +43,16 @@ setup(name='collective.recipe.i18noverrides',
       long_description=long_description,
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-        'Framework :: Buildout',
-        'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'License :: OSI Approved :: GNU General Public License (GPL)',
-        ],
+          'Framework :: Buildout',
+          'Intended Audience :: Developers',
+          'Topic :: Software Development :: Build Tools',
+          'Topic :: Software Development :: Libraries :: Python Modules',
+          'License :: OSI Approved :: GNU General Public License (GPL)',
+          ],
       keywords='i18n',
       author='Maurits van Rees',
       author_email='m.van.rees@zestsoftware.nl',
-      url='http://pypi.python.org/pypi/collective.recipe.i18noverrides',
+      url='https://github.com/collective/collective.recipe.i18noverrides',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['collective', 'collective.recipe'],
@@ -63,6 +64,6 @@ setup(name='collective.recipe.i18noverrides',
                         ],
       tests_require=tests_require,
       extras_require=dict(tests=tests_require),
-      test_suite = 'collective.recipe.i18noverrides.tests.test_docs.test_suite',
+      test_suite='collective.recipe.i18noverrides.tests.test_docs.test_suite',
       entry_points=entry_points,
       )

@@ -4,7 +4,9 @@ History of collective.recipe.i18noverrides
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Moved to github:
+  https://github.com/collective/collective.recipe.i18noverrides
+  [maurits]
 
 
 1.0 (2010-08-25)
