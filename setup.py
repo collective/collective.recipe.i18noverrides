@@ -35,13 +35,15 @@ long_description = (
 entry_point = 'collective.recipe.i18noverrides:Recipe'
 entry_points = {"zc.buildout": ["default = %s" % entry_point]}
 
-tests_require=['zope.testing', 'zc.buildout']
+tests_require = ['zope.testing', 'zc.buildout']
 
 setup(name='collective.recipe.i18noverrides',
       version=version,
-      description="Override translations by putting some .po files in the i18n directory of the zope 2 instance",
+      description=("Override translations by putting some .po files in the "
+                   "i18n directory of the zope 2 instance"),
       long_description=long_description,
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
+      # Get more strings from
+      # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
           'Framework :: Buildout',
           'Framework :: Plone',
