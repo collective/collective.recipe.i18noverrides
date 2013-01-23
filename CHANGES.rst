@@ -1,7 +1,7 @@
 History of collective.recipe.i18noverrides
 ==========================================
 
-1.2 (unreleased)
+1.2 (2013-01-23)
 ----------------
 
 - Raise ``zc.buildout.UserWarning`` in case of errors.  This is how it
