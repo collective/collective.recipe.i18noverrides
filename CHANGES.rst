@@ -4,7 +4,10 @@ History of collective.recipe.i18noverrides
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Raise ``zc.buildout.UserWarning`` in case of errors.  This is how it
+  should be done.  It is more noticeable than logging an error (which
+  may not be really visible as error) and quitting.
+  [maurits]
 
 
 1.1 (2012-09-13)

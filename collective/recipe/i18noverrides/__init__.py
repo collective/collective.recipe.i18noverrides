@@ -4,7 +4,6 @@
 import logging
 import os
 import shutil
-import sys
 import pkg_resources
 import zc.buildout
 
@@ -35,20 +34,21 @@ class Recipe(object):
                     destinations.append(part['location'])
         for dir in [source] + destinations:
             if not os.path.exists(dir):
-                logger.error('path %r does not exist.', dir)
-                sys.exit(1)
+                raise zc.buildout.UserError(
+                    "path %r does not exist. You must list the %s part "
+                    "after all plone.recipe.zope2instance parts." % (
+                        dir, self.name))
             if not os.path.isdir(dir):
-                logger.error('path %r must be a directory.', dir)
-                sys.exit(1)
+                error = 'path %r must be a directory.' % dir
+                raise zc.buildout.UserError(error)
         self.destinations = destinations
         self.source = source
 
     def sourceFromEgg(self, egg_spec, source):
         if os.path.abspath(source) == source:
-            logmsg = ('because egg option is provided,\n' +
-                'source \'%s\' should be relative, not absolute.')
-            logger.error(logmsg, source)
-            sys.exit(1)
+            error = ("Because egg option is provided,\n"
+                     "source '%s' should be relative, not absolute." % source)
+            raise zc.buildout.UserError(error)
         package_name = self.options.get('package', egg_spec)
         try:
             req = pkg_resources.Requirement.parse(egg_spec)
@@ -75,8 +75,8 @@ class Recipe(object):
                     allow_hosts=buildout._allow_hosts)
             package = __import__(package_name, {}, {}, '__doc__')
         except ImportError:
-            logger.error('Package %r could not be imported.', package_name)
-            sys.exit(1)
+            error = 'Package %r could not be imported.' % package_name
+            raise zc.buildout.UserError(error)
         path = os.path.dirname(package.__file__)
         return os.path.join(path, source)
 
@@ -85,7 +85,10 @@ class Recipe(object):
         self.configure()
         po_files = [f for f in os.listdir(self.source) if f.endswith('.po')]
         if len(po_files) == 0:
-            logger.warn('source %r contains no .po files.', self.source)
+            # Note that logger.warn does not print 'Warning'
+            # automatically for some reason, so we add it manually.
+            logger.warn('Warning: source %r contains no .po files.',
+                        self.source)
             return tuple()
 
         created = []
@@ -100,8 +103,8 @@ class Recipe(object):
                 os.mkdir(i18n_dir)
                 created.append(i18n_dir)
             if not os.path.isdir(i18n_dir):
-                logger.error("%r is not a directory." % i18n_dir)
-                sys.exit(1)
+                error = "%r is not a directory." % i18n_dir
+                raise zc.buildout.UserError(error)
             for po_file in po_files:
                 file_path = os.path.join(self.source, po_file)
                 shutil.copy(file_path, i18n_dir)

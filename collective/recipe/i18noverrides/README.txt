@@ -59,7 +59,9 @@ Running the buildout gives us::
 
     >>> print system(buildout)
     Installing i18noverrides.
-    collective.recipe.i18noverrides: path '/sample-buildout/translations' does not exist.
+    While:
+      Installing i18noverrides.
+    Error: path '/sample-buildout/translations' does not exist. You must list the i18noverrides part after all plone.recipe.zope2instance parts.
     <BLANKLINE>
 
 The source must be a directory::
@@ -67,7 +69,9 @@ The source must be a directory::
     >>> write('translations', 'This is a file.')
     >>> print system(buildout)
     Installing i18noverrides.
-    collective.recipe.i18noverrides: path '/sample-buildout/translations' must be a directory.
+    While:
+      Installing i18noverrides.
+    Error: path '/sample-buildout/translations' must be a directory.
     <BLANKLINE>
 
 Now we remove this file and try with a proper directory::
@@ -76,7 +80,9 @@ Now we remove this file and try with a proper directory::
     >>> mkdir('translations')
     >>> print system(buildout)
     Installing i18noverrides.
-    collective.recipe.i18noverrides: path '/sample-buildout/instance' does not exist.
+    While:
+      Installing i18noverrides.
+    Error: path '/sample-buildout/instance' does not exist. You must list the i18noverrides part after all plone.recipe.zope2instance parts.
     <BLANKLINE>
 
 So we set a destination too and first try with a file as well before
@@ -85,13 +91,15 @@ creating a directory::
     >>> write('instance', 'This is a file.')
     >>> print system(buildout)
     Installing i18noverrides.
-    collective.recipe.i18noverrides: path '/sample-buildout/instance' must be a directory.
+    While:
+      Installing i18noverrides.
+    Error: path '/sample-buildout/instance' must be a directory.
     <BLANKLINE>
     >>> remove('instance')
     >>> mkdir('instance')
     >>> print system(buildout)
     Installing i18noverrides.
-    collective.recipe.i18noverrides: source '/sample-buildout/translations' contains no .po files.
+    collective.recipe.i18noverrides: Warning: source '/sample-buildout/translations' contains no .po files.
     <BLANKLINE>
 
 Now the source and destination have been setup correctly, but we get a
@@ -103,7 +111,7 @@ now runs in update mode, which does the same as the install mode::
     >>> write('translations', 'not-a-po-file', 'I am not a po file')
     >>> print system(buildout)
     Updating i18noverrides.
-    collective.recipe.i18noverrides: source '/sample-buildout/translations' contains no .po files.
+    collective.recipe.i18noverrides: Warning: source '/sample-buildout/translations' contains no .po files.
     <BLANKLINE>
     >>> write('translations', 'plone-nl.po', 'I am a Dutch plone po file')
     >>> write('translations', 'plone-de.po', 'I am a German plone po file')
@@ -140,7 +148,9 @@ a i18n file instead of a directory, we fail::
     >>> write('instance', 'i18n', 'I am a file')
     >>> print system(buildout)
     Updating i18noverrides.
-    collective.recipe.i18noverrides: '/sample-buildout/instance/i18n' is not a directory.
+    While:
+      Updating i18noverrides.
+    Error: '/sample-buildout/instance/i18n' is not a directory.
     <BLANKLINE>
     >>> remove('instance', 'i18n')
 
@@ -153,7 +163,9 @@ It should also be possible to have multiple destinations::
     ...     ${buildout:directory}/instance2"""})
     >>> print system(buildout)
     Installing i18noverrides.
-    collective.recipe.i18noverrides: path '/sample-buildout/instance2' does not exist.
+    While:
+      Installing i18noverrides.
+    Error: path '/sample-buildout/instance2' does not exist. You must list the i18noverrides part after all plone.recipe.zope2instance parts.
     <BLANKLINE>
 
 Right, right, we will create that directory too::
@@ -384,7 +396,9 @@ Running the buildout gives us::
     >>> print system(buildout)
     Uninstalling i18noverrides.
     Installing i18noverrides.
-    collective.recipe.i18noverrides: because egg option is provided,
+    While:
+      Installing i18noverrides.
+    Error: Because egg option is provided,
     source '/translations' should be relative, not absolute.
     <BLANKLINE>
 
@@ -399,5 +413,7 @@ Running the buildout gives us::
 
     >>> print system(buildout)
     Installing i18noverrides.
-    collective.recipe.i18noverrides: path '/sample-buildout/eggs/zc.recipe.egg.../zc/recipe/egg/translations' does not exist.
+    While:
+      Installing i18noverrides.
+    Error: path '/sample-buildout/eggs/zc.recipe.egg.../zc/recipe/egg/translations' does not exist. You must list the i18noverrides part after all plone.recipe.zope2instance parts.
     <BLANKLINE>
